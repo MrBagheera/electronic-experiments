@@ -7,6 +7,14 @@ void setupDigit() {
   pinMode(SEGMENT_5, OUTPUT);      
   pinMode(SEGMENT_6, OUTPUT);      
   pinMode(SEGMENT_7, OUTPUT);        
+  digitalWrite(SEGMENT_0, 1);
+  digitalWrite(SEGMENT_1, 1);
+  digitalWrite(SEGMENT_2, 1);
+  digitalWrite(SEGMENT_3, 1);
+  digitalWrite(SEGMENT_4, 1);
+  digitalWrite(SEGMENT_5, 1);
+  digitalWrite(SEGMENT_6, 1);
+  digitalWrite(SEGMENT_7, 1);
 }
 
 void displayDigit(int digit, boolean displayDot) {

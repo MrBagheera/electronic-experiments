@@ -10,12 +10,23 @@ const int SEGMENT_5 = SEGMENTS_BASE + 5;
 const int SEGMENT_6 = SEGMENTS_BASE + 6;
 const int SEGMENT_7 = SEGMENTS_BASE + 7;
 
+// buttons multiplexor
+const int BUTTONS_SELECTOR_BASE = 10;
+const int BUTTONS_SELECTOR_0 = BUTTONS_SELECTOR_BASE;
+const int BUTTONS_SELECTOR_1 = BUTTONS_SELECTOR_BASE + 1;
+const int BUTTONS_SELECTOR_2 = BUTTONS_SELECTOR_BASE + 2;
+const int BUTTONS_SELECTOR_3 = BUTTONS_SELECTOR_BASE + 3;
+const int BUTTIONS_INPUT = A0;
+const int NO_BUTTON = -1;
+
+
 int inByte = 0;         // incoming serial byte
 boolean displayDot = false;
 
 
 void setup() {
   setupDigit();
+  setupButtons();
   Serial.begin(9600);
 }
 
@@ -44,5 +55,13 @@ void loop()
         Serial.flush();
         break;
     }
-  }  
+  }
+  else {
+    int button = readButtons();
+    if (button != NO_BUTTON) {
+      displayDigit(button, displayDot);
+      Serial.println(button);
+      Serial.flush();
+    }
+  }
 }
