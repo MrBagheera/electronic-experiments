@@ -1,14 +1,23 @@
 
-// 0 segment
-const int SEGMENTS_BASE =  2;
-const int SEGMENT_0 = SEGMENTS_BASE;
-const int SEGMENT_1 = SEGMENTS_BASE + 1;
-const int SEGMENT_2 = SEGMENTS_BASE + 2;
-const int SEGMENT_3 = SEGMENTS_BASE + 3;
-const int SEGMENT_4 = SEGMENTS_BASE + 4;
-const int SEGMENT_5 = SEGMENTS_BASE + 5;
-const int SEGMENT_6 = SEGMENTS_BASE + 6;
-const int SEGMENT_7 = SEGMENTS_BASE + 7;
+// LEDs and 7(+1) segment digit display via shift register
+const int LED_SHIFT_DATA_PIN = 2;
+const int LED_SHIFT_STORAGE_PIN = 3;
+const int LED_SHIFT_SHIFT_PIN = 4;
+byte DIGIT_CODES[] = { 
+  0b10111110, // 0
+  0b00000110, // 1
+  0b01111100, // 2
+  0b01011110, // 3
+  0b11000110, // 4
+  0b11011010, // 5
+  0b11111010, // 6
+  0b00001110, // 7
+  0b11111110, // 8
+  0b11011110  // 9
+};
+const byte DOT_CODE = 0b00000001;
+
+
 
 // buttons multiplexor
 const int BUTTONS_SELECTOR_BASE = 10;
@@ -50,7 +59,7 @@ void loop()
       case '8':
       case '9':
         displayDigit(inByte - '0', displayDot);
-        Serial.println(inByte);
+        Serial.println(inByte - '0');
         Serial.println("OK");
         Serial.flush();
         break;
