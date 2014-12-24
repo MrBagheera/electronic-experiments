@@ -5,6 +5,25 @@ void setupButtons() {
   pinMode(BUTTONS_SELECTOR_3, OUTPUT);        
 }
 
+
+int lastPressedButton = NO_BUTTON;
+
+
+/** 
+  * Returns first pressed button, but only on first call. 
+  * Subsequent calls return NO_BUTTON eve if the button stays pressed. 
+  */
+int readButtonPress() {
+  int currentButton = readButtons();
+  if (currentButton == lastPressedButton) {
+    return NO_BUTTON;
+  }
+  lastPressedButton = currentButton;
+  return currentButton;
+}
+
+
+/** Returns first pressed button, as long as button stays pressed. */
 int readButtons() {
   for (int i = 0; i < 16; i++) {
     selectButton(i);
@@ -17,7 +36,7 @@ int readButtons() {
   return NO_BUTTON;
 }
 
-// compensates from idiod board design
+// compensates for idiod board design
 int transformButton(int i) {
   switch (i) {
     case 4: return 2;

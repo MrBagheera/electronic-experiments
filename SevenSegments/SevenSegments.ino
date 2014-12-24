@@ -66,7 +66,7 @@ void loop()
     }
   }
   else {
-    int button = readButtons();
+    int button = readButtonPress();
     if (button != NO_BUTTON) {
       displayDigit(button, displayDot);
       Serial.println(button);
