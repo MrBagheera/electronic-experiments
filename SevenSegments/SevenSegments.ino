@@ -1,4 +1,7 @@
 
+#include "pitches.h"
+
+
 // LEDs and 7(+1) segment digit display via shift register
 const int LED_SHIFT_DATA_PIN = 2;
 const int LED_SHIFT_STORAGE_PIN = 3;
@@ -18,7 +21,6 @@ byte DIGIT_CODES[] = {
 const byte DOT_CODE = 0b00000001;
 
 
-
 // buttons multiplexor
 const int BUTTONS_SELECTOR_BASE = 10;
 const int BUTTONS_SELECTOR_0 = BUTTONS_SELECTOR_BASE;
@@ -27,6 +29,23 @@ const int BUTTONS_SELECTOR_2 = BUTTONS_SELECTOR_BASE + 2;
 const int BUTTONS_SELECTOR_3 = BUTTONS_SELECTOR_BASE + 3;
 const int BUTTIONS_INPUT = A0;
 const int NO_BUTTON = -1;
+
+
+// tones
+const int TONE_PIN = 5;
+const long DIGIT_TONE_DURATION = 500;
+unsigned short DIGIT_TONES[] = {
+  NOTE_A4, // 0
+  NOTE_B4, // 1
+  NOTE_C5, // 2
+  NOTE_D5, // 3
+  NOTE_E5, // 4
+  NOTE_F5, // 5
+  NOTE_G5, // 6
+  NOTE_A5, // 7
+  NOTE_B5, // 8
+  NOTE_C6  // 9
+};
 
 
 int inByte = 0;         // incoming serial byte
@@ -69,6 +88,7 @@ void loop()
     int button = readButtonPress();
     if (button != NO_BUTTON) {
       displayDigit(button, displayDot);
+      tone(TONE_PIN, DIGIT_TONES[button], DIGIT_TONE_DURATION);
       Serial.println(button);
       Serial.flush();
     }
