@@ -2,7 +2,7 @@ import math
 import pigpio
 import time
 import sys
-import os
+import pymplb
 
 class Halloween2015:
     """A class controlling Halloween 2015 scary monster"""
@@ -25,8 +25,9 @@ class Halloween2015:
         self.pi.set_mode(self.servo_pin, pigpio.OUTPUT)
         self.pi.set_mode(self.eyes_pin, pigpio.OUTPUT)
 
-        self.idle = True
-        self.cycle_start_time = time.time()
+        self.player = pymplb.MPlayer()
+
+        self.start_idle_cycle()
 
     def run(self):
         try:
@@ -52,6 +53,8 @@ class Halloween2015:
         print "Start idle cycle"
         self.idle = True
         self.cycle_start_time = time.time()
+        self.player.loadfile("moro.ogg")
+        self.player.pause()
 
     def run_idle_cycle(self, cycle_time):
         self.pi.set_PWM_dutycycle(self.light_r_pin, 255)
@@ -61,38 +64,38 @@ class Halloween2015:
         self.pi.set_PWM_dutycycle(self.eyes_pin, 0)
         self.pi.set_servo_pulsewidth(self.servo_pin, 0)
 
-        if cycle_time > 14 and self.pi.read(self.motion_pin) == 1:
+        if cycle_time > 5 and self.pi.read(self.motion_pin) == 1:
             self.start_animation_cycle()
 
     def start_animation_cycle(self):
         print "%s: Start ani cycle" % time.strftime("%H:%M:%S")
         self.idle = False
         self.cycle_start_time = time.time()
-        os.system('mplayer moro.ogg &')
+        self.player.pause()
 
     def run_animation_cycle(self, cycle_time):
         r_base = 255
         r_mix = 0
-        r = self.animate_mix(3, 4, 4, 3, r_base, r_mix, cycle_time)
+        r = self.animate_mix(0, 4, 4, 3, r_base, r_mix, cycle_time)
         self.pi.set_PWM_dutycycle(self.light_r_pin, r)
         g_base = self.animate_sin(0, 48, 1, time.time())
         g_mix = self.animate_sin(64, 192, 3, cycle_time)
-        g = self.animate_mix(3, 4, 4, 3, g_base, g_mix, cycle_time)
+        g = self.animate_mix(0, 4, 4, 3, g_base, g_mix, cycle_time)
         self.pi.set_PWM_dutycycle(self.light_g_pin, g)
         b_base = 0
         b_mix = 192
-        b = self.animate_mix(3, 4, 4, 3, b_base, b_mix, cycle_time)
+        b = self.animate_mix(0, 4, 4, 3, b_base, b_mix, cycle_time)
         self.pi.set_PWM_dutycycle(self.light_b_pin, b)
         eyes_base = 0
         eyes_mix = 255
-        eyes = self.animate_mix(6, 1, 5, 1, eyes_base, eyes_mix, cycle_time)
+        eyes = self.animate_mix(3, 1, 5, 1, eyes_base, eyes_mix, cycle_time)
         self.pi.set_PWM_dutycycle(self.eyes_pin, eyes)
 
-        head_start = self.animate_mix(6, 0.15, 0.35, 0.15, 1500, 600, cycle_time)
-        head = self.animate_mix(12, 0.25, 0.15, 0.35, head_start, 2400, cycle_time)
+        head_start = self.animate_mix(3, 0, 0.25, 0.15, 1500, 600, cycle_time)
+        head = self.animate_mix(9, 0, 0.25, 0.15, head_start, 2400, cycle_time)
         self.pi.set_servo_pulsewidth(self.servo_pin, head)
 
-        if cycle_time > 14:
+        if cycle_time > 11:
             self.start_idle_cycle()
 
     def animate_sin(self, min_value, max_value, period, time):
